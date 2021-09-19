@@ -6,21 +6,20 @@ import logging
 import pandas as pd
 
 class decorator_3:
-    global result, dict
-    result = []
-    dict = {}
+    global result= [], dict= {}
+   
     def __init__(self,func):
         self.func = func
         self.count = 0
 
     def __call__(self,*args,**kwargs):
-        def Sort_sub(sub_lst):
-            sub_lst.sort(key=lambda x: x[1])
-            return sub_lst
+        def sort_first(first):
+            first.sort(key=lambda x: x[1])
+            return first
 
-        def insert_second(lst,i):
-            lst.insert(1,i)
-            return lst
+        def insert_second(first,i):
+            first.insert(1,i)
+            return first
 
         self.count += 1
         start = time.time()
@@ -28,16 +27,17 @@ class decorator_3:
             self.func(*args,**kwargs)
         end = time.time()
         res = f.getvalue()
+        
         if self.func.__name__ in dict:
             return
         else:
             dict[self.func.__name__] = end
-
+            
         if len(dict) == 4:
             result = [[k,v] for k,v in dict.items()]
-            final = Sort_sub(result)
+            final = sort_first(result)
             rank = [insert_second(j,i+1) for i,j in enumerate(result)]
-            df = pd.DataFrame(rank,columns=["functionName", "Rank","Time"])
+            df = pd.DataFrame(rank,columns= ["PROGRAM", "RANK", "TIME ELAPSED"])
             print(df)
 
         with open("output.txt", "a") as f:
